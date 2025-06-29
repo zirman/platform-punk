@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c4u2ae32iqc04"]
 
-[ext_resource type="Script" uid="uid://crmaq16fgnkuk" path="res://scenes/KillZone.cs" id="1_kebdr"]
+[ext_resource type="Script" uid="uid://crmaq16fgnkuk" path="res://scripts/KillZone.cs" id="1_kebdr"]
 
 [node name="kill_zone" type="Area2D"]
 collision_mask = 2
@@ -11,3 +11,4 @@ wait_time = 0.6
 one_shot = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

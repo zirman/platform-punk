@@ -1,14 +1,15 @@
 using Godot;
-using System;
+
+namespace PlatformPunk.scripts;
 
 public partial class Player : CharacterBody2D
 {
-	public const float Speed = 130.0f;
-	public const float JumpVelocity = -300.0f;
+	private const float Speed = 130.0f;
+	private const float JumpVelocity = -300.0f;
 
 	public override void _PhysicsProcess(double delta)
 	{
-		Vector2 velocity = Velocity;
+		var velocity = Velocity;
 
 		// Add the gravity.
 		if (!IsOnFloor())
@@ -24,7 +25,7 @@ public partial class Player : CharacterBody2D
 
 		// Get the input direction and handle the movement/deceleration.
 		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+		var direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 		if (direction != Vector2.Zero)
 		{
 			velocity.X = direction.X * Speed;
