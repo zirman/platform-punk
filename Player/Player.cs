@@ -5,7 +5,7 @@ namespace PlatformPunk.Player;
 public partial class Player : CharacterBody2D
 {
     private const float TopSpeed = 100f;
-    private const float Acceleration = 170f;
+    private const float Acceleration = 200f;
     private const float JumpVelocity = 300f;
     private const float WallSlideFriction = 800f;
     private const float DoubleJumpRatio = .75f;
@@ -18,7 +18,7 @@ public partial class Player : CharacterBody2D
         // Add gravity acceleration
         if (!IsOnFloor()) velocity += GetGravity() * (float)delta;
         // Wall slide friction
-        if (IsOnWall())
+        if (IsOnWall()) // TODO: make only work if walking into wall
         {
             velocity.Y = Mathf.MoveToward(velocity.Y, 0, (float)delta * WallSlideFriction);
         }
