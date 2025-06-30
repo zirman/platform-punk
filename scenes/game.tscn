@@ -1,11 +1,13 @@
-[gd_scene load_steps=13 format=3 uid="uid://cb5jd13sm7igf"]
+[gd_scene load_steps=15 format=3 uid="uid://cb5jd13sm7igf"]
 
+[ext_resource type="Script" uid="uid://bjk67f5ikltrd" path="res://GameManager/GameManager.cs" id="1_gee14"]
 [ext_resource type="PackedScene" uid="uid://w6167bugd6jc" path="res://Player/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://5c8vcrfujutb" path="res://assets/sprites/world_tileset.png" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://csh3retsyk0ec" path="res://Platform/platform.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://dk50mo5mf55st" path="res://Coin/coin.tscn" id="4_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://c4u2ae32iqc04" path="res://scenes/kill_zone.tscn" id="5_iywne"]
 [ext_resource type="PackedScene" uid="uid://bl75tgb0k65lh" path="res://Slime/slime.tscn" id="6_p57ef"]
+[ext_resource type="FontFile" uid="uid://bux8guc2qfoim" path="res://assets/fonts/PixelOperator8.ttf" id="8_0tnpc"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
 texture = ExtResource("2_yqjtg")
@@ -211,6 +213,10 @@ _data = {
 
 [node name="Game" type="Node2D"]
 
+[node name="GameManager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("1_gee14")
+
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2(1, 0)
 tile_set = SubResource("TileSet_lbhrr")
@@ -260,4 +266,13 @@ position = Vector2(255, -31)
 position = Vector2(283, -32)
 
 [node name="Slime" parent="." instance=ExtResource("6_p57ef")]
-position = Vector2(433, -16)
+position = Vector2(42, 0)
+
+[node name="Label" type="Label" parent="."]
+offset_left = -66.0
+offset_top = -58.0
+offset_right = 39.0
+offset_bottom = -30.0
+theme_override_fonts/font = ExtResource("8_0tnpc")
+theme_override_font_sizes/font_size = 8
+text = "Space to Jump"

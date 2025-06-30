@@ -49,6 +49,7 @@ script = ExtResource("1_8yoi5")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_v5wyi")
+autoplay = "default"
 frame = 1
 frame_progress = 0.0582738
 
@@ -57,3 +58,9 @@ frame_progress = 0.0582738
 [node name="CollisionShape2D" type="CollisionShape2D" parent="kill_zone"]
 position = Vector2(0, -6.5)
 shape = SubResource("RectangleShape2D_0l8pv")
+
+[node name="RayCastRight" type="RayCast2D" parent="."]
+target_position = Vector2(5, -1)
+
+[node name="RayCastLeft" type="RayCast2D" parent="."]
+target_position = Vector2(-5, -1)

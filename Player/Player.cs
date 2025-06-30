@@ -1,41 +1,58 @@
+using System;
 using Godot;
 
-namespace PlatformPunk.scripts;
+namespace PlatformPunk.Player;
 
 public partial class Player : CharacterBody2D
 {
-	private const float Speed = 130.0f;
-	private const float JumpVelocity = -300.0f;
+    private const float TopSpeed = 100.0f;
+    private const float Acceleration = 130.0f;
+    private const float JumpVelocity = -300.0f;
 
-	public override void _PhysicsProcess(double delta)
-	{
-		var velocity = Velocity;
+    private bool _doubleJump = false;
 
-		// Add the gravity.
-		if (!IsOnFloor())
-		{
-			velocity += GetGravity() * (float)delta;
-		}
+    public override void _PhysicsProcess(double delta)
+    {
+        var velocity = Velocity;
 
-		// Handle Jump.
-		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
-		{
-			velocity.Y = JumpVelocity;
-		}
+        // Add the gravity.
+        if (!IsOnFloor()) velocity += GetGravity() * (float)delta;
 
-		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
-		var direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		if (direction != Vector2.Zero)
-		{
-			velocity.X = direction.X * Speed;
-		}
-		else
-		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-		}
+        // Handle Jump.
+        if (Input.IsActionJustPressed("jump"))
+        {
+            if (IsOnFloor())
+            {
+                _doubleJump = true;
+                velocity.Y = JumpVelocity;
+            }
+            else if (_doubleJump)
+            {
+                _doubleJump = false;
+                velocity.Y = JumpVelocity * .75f;
+            }
+        }
 
-		Velocity = velocity;
-		MoveAndSlide();
-	}
+        // Get the input direction and handle the movement/deceleration.
+        // As good practice, you should replace UI actions with custom gameplay actions.
+        var direction = Input.GetVector("move_left", "move_right", "ui_up", "ui_down");
+        var animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        if (direction != Vector2.Zero)
+        {
+            animatedSprite.Play(IsOnFloor() ? "run" : "jump");
+            animatedSprite.FlipH = direction.X < 0;
+            if (velocity.X < 0 && direction.X > 0 || velocity.X > 0 && direction.X < 0)
+                velocity.X = Mathf.MoveToward(velocity.X, 0, (float)delta * Acceleration * 2);
+            else
+                velocity.X = float.Clamp(velocity.X + direction.X * (float)delta * Acceleration, -TopSpeed, TopSpeed);
+        }
+        else
+        {
+            animatedSprite.Play(IsOnFloor() ? "idle" : "jump");
+            velocity.X = Mathf.MoveToward(velocity.X, 0, (float)delta * Acceleration * 2);
+        }
+
+        Velocity = velocity;
+        MoveAndSlide();
+    }
 }
