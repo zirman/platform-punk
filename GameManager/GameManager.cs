@@ -4,7 +4,7 @@ namespace PlatformPunk.GameManager;
 
 public partial class GameManager : Node
 {
-    private int _score = 0;
+    private int _score;
 
     public void AddPoint()
     {
