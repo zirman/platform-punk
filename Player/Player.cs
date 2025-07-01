@@ -15,10 +15,18 @@ public partial class Player : CharacterBody2D
     {
         var velocity = Velocity;
         var animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        // Get the input direction and handle the movement/deceleration.
+        // As good practice, you should replace UI actions with custom gameplay actions.
+        var inputDirection = Input.GetVector("move_left", "move_right", "ui_up", "ui_down");
         // Add gravity acceleration
         if (!IsOnFloor()) velocity += GetGravity() * (float)delta;
         // Wall slide friction
-        if (IsOnWall()) // TODO: make only work if walking into wall
+        if (IsOnWall() &&
+            // Is pushing into wall
+            (inputDirection.X > 0 && GetWallNormal().X < 0 ||
+             inputDirection.X < 0 && GetWallNormal().X > 0) &&
+            // Is moving down
+            (velocity.Y >= 0))
         {
             velocity.Y = Mathf.MoveToward(velocity.Y, 0, (float)delta * WallSlideFriction);
         }
@@ -40,8 +48,6 @@ public partial class Player : CharacterBody2D
                 {
                     velocity = Vector2.FromAngle(Mathf.Pi * 11.5f / 8) * JumpVelocity;
                 }
-
-
             }
             else if (_doubleJump)
             {
@@ -49,17 +55,14 @@ public partial class Player : CharacterBody2D
                 velocity.Y = -JumpVelocity * DoubleJumpRatio;
             }
 
-        // Get the input direction and handle the movement/deceleration.
-        // As good practice, you should replace UI actions with custom gameplay actions.
-        var direction = Input.GetVector("move_left", "move_right", "ui_up", "ui_down");
-        if (direction != Vector2.Zero)
+        if (inputDirection != Vector2.Zero)
         {
             // running or jumping animation
             animatedSprite.Play(IsOnFloor() ? "run" : "jump");
-            animatedSprite.FlipH = direction.X < 0;
-            velocity.X = velocity.X < 0 && direction.X > 0 || velocity.X > 0 && direction.X < 0
+            animatedSprite.FlipH = inputDirection.X < 0;
+            velocity.X = velocity.X < 0 && inputDirection.X > 0 || velocity.X > 0 && inputDirection.X < 0
                 ? Mathf.MoveToward(velocity.X, 0, (float)delta * Acceleration * 2)
-                : float.Clamp(velocity.X + direction.X * (float)delta * Acceleration, -TopSpeed, TopSpeed);
+                : float.Clamp(velocity.X + inputDirection.X * (float)delta * Acceleration, -TopSpeed, TopSpeed);
         }
         else
         {
